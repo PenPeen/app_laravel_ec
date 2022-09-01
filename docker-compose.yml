@@ -21,6 +21,7 @@ services:
     volumes:
       - ./source:/var/www/html
       - ./php/vhost.conf:/etc/apache2/conf-enabled/vhost.conf
+      - ./php/php.ini:/usr/local/etc/php/php.ini
     ports:
       - "8080:80"
   phpmyadmin:

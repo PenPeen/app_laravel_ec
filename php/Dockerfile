@@ -28,3 +28,15 @@ ENV COMPOSER_ALLOW_SUPERUSER 1
 ENV COMPOSER_HOME /composer
 ENV PATH $PATH:/composer/vendor/bin
 ENV TZ=Asia/Tokyo
+
+# GD
+RUN apt-get update && \
+  apt-get -y install git libicu-dev libonig-dev libzip-dev unzip nodejs npm vim unzip libfreetype6-dev libjpeg62-turbo-dev libpng-dev libjpeg-dev \
+  && docker-php-ext-install \
+  pdo_mysql \
+  bcmath \
+  gd \
+  && docker-php-ext-configure gd \
+  --with-freetype=/usr/include/ \
+  --with-jpeg=/usr/include/ \
+  && docker-php-ext-install -j$(nproc) gd

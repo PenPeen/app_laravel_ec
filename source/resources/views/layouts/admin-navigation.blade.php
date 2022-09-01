@@ -80,6 +80,10 @@
                 :active="request()->routeIs('admin.owners.index')">
                 オーナー管理
             </x-responsive-nav-link>
+            <x-responsive-nav-link :href="route('admin.owners.index')"
+                :active="request()->routeIs('admin.expired-owners.index')">
+                期限切れオーナー一覧
+            </x-responsive-nav-link>
         </div>
 
         <!-- Responsive Settings Options -->
