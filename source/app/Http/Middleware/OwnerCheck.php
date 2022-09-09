@@ -6,6 +6,12 @@ use Closure;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 
+/**
+ * Ownerチェックリクエスト
+ * 
+ *  自身が管理するShopにのみアクセスを許可する。
+ *  Auth::id() === shop_id 
+ */
 class OwnerCheck
 {
     /**

@@ -11,7 +11,7 @@ class Admin extends Authenticatable
     use HasFactory;
 
     /**
-     * The attributes that are mass assignable.
+     * create,update,fill 許可
      *
      * @var array<int, string>
      */

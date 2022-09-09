@@ -9,6 +9,7 @@ class Shop extends Model
 {
     use HasFactory;
 
+    // 更新を許可するカラム
     protected $fillable = [
         'owner_id',
         'name',
@@ -23,5 +24,13 @@ class Shop extends Model
     public function owner()
     {
         return $this->belongsTo(Owner::class);
+    }
+
+    /**
+     * Productクラスとのリレーション設定
+     */
+    public function product()
+    {
+        return $this->hasMany(Product::class);
     }
 }

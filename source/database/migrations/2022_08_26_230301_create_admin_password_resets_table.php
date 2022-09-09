@@ -4,6 +4,9 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
+/**
+ * Adminパスワードリセット用テーブルの作成
+ */
 class CreateAdminPasswordResetsTable extends Migration
 {
     /**

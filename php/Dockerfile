@@ -14,7 +14,8 @@ RUN apt-get update \
 # composer インストール
 RUN curl -sS https://getcomposer.org/installer | php \
   && mv composer.phar /usr/local/bin/composer \
-  && chmod +x /usr/local/bin/composer
+  && chmod +x /usr/local/bin/composer \
+  && composer self-update
 
 # phpcs インストール
 RUN composer global require squizlabs/php_codesniffer
@@ -22,12 +23,13 @@ RUN composer global require squizlabs/php_codesniffer
 ENV PATH=/root/.config/composer/vendor/bin:$PATH
 
 # debugbarインストール
-RUN composer require barryvdh/laravel-debugbar
+RUN composer require --dev barryvdh/laravel-debugbar
 
 ENV COMPOSER_ALLOW_SUPERUSER 1
 ENV COMPOSER_HOME /composer
 ENV PATH $PATH:/composer/vendor/bin
 ENV TZ=Asia/Tokyo
+ENV DEBUGBAR_ENABLED=true
 
 # GD
 RUN apt-get update && \

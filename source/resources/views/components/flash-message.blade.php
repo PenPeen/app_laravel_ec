@@ -19,7 +19,7 @@ $bgColor = 'bf-red-500';
 @endphp
 
 @if(session('message'))
-<div class="{{$bgColor}} w-1/2 mx-auto p-2">
+<div class="{{$bgColor}} w-1/2 mx-auto mb-3 p-2">
     {{session('message')}}
 </div>
 @endif

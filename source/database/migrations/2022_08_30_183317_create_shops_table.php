@@ -4,6 +4,9 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
+/**
+ * Shopsテーブルの作成
+ */
 class CreateShopsTable extends Migration
 {
     /**
@@ -15,6 +18,7 @@ class CreateShopsTable extends Migration
     {
         Schema::create('shops', function (Blueprint $table) {
             $table->id();
+            // 外部キー制約
             $table
                 ->foreignId('owner_id')
                 ->constrained()

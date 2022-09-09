@@ -3,13 +3,8 @@
 namespace App\Http\Controllers\Owner;
 
 use App\Http\Controllers\Controller;
-use Illuminate\Http\Request;
-use Illuminate\Support\Facades\DB;
 use App\Models\Shop;
-use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Facades\Storage;
-use InterventionImage;
 use App\Http\Requests\UploadImageRequest;
 use App\Services\ImageService;
 
@@ -19,31 +14,29 @@ use App\Services\ImageService;
 class ShopController extends Controller
 {
 
+    /**
+     * コンストラクタ
+     */
     public function __construct()
     {
         $this->middleware('auth:owners');
     }
 
     /**
-     * 自身が管理しているShopの一覧表示
+     * Index 自身が管理しているShopの一覧表示
      */
     public function index()
     {
         $shops = Shop::where('owner_id', Auth::id())->get();
-
-        return view(
-            'owner.shops.index',
-            ['shops' => $shops]
-        );
+        return view('owner.shops.index', compact('shops'));
     }
 
     /**
-     * Shop情報の編集画面
+     * edit Shop情報の編集画面表示
      */
     public function edit($id)
     {
         $shop = Shop::findOrFail($id);
-
         return view('owner.shops.edit', compact('shop'));
     }
 
@@ -64,24 +57,24 @@ class ShopController extends Controller
         // 画像処理
         $file = $request->file('image');
         if (!is_null($file) && $file->isValid()) {
-            // ファットコントローラー対策
-            $fileNameToStore = ImageService::upload(
-                $file,
-                'shops'
-            );
+            // サービスクラス呼び出し（ファットコントローラー対策）
+            $fileNameToStore = ImageService::upload($file, 'shops');
         }
 
         // DB保存
         $shop = Shop::findOrFail($id);
         $shop->name = $request->input('name');
         $shop->information = $request->input('information');
+        $shop->is_selling = $request->input('is_selling');
+
+        // 画像が設定されている場合
         if (!is_null($file) && $file->isValid()) {
             $shop->filename = $fileNameToStore;
         }
-        $shop->is_selling = $request->input('is_selling');
 
         $shop->save();
 
+        // リダイレクト処理 Flashメッセージ表示
         return redirect(route('owner.shops.index'))
             ->with([
                 'message' => '登録が完了しました。',

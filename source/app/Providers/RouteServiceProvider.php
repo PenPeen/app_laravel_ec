@@ -31,7 +31,10 @@ class RouteServiceProvider extends ServiceProvider
     // protected $namespace = 'App\\Http\\Controllers';
 
     /**
-     * Define your route model bindings, pattern filters, etc.
+     * ルートモデルのバインディング、パターンフィルタを定義
+     * 
+     * User,Owner,Adminの設定
+     * Prefix ,Asの設定
      *
      * @return void
      */
@@ -45,18 +48,21 @@ class RouteServiceProvider extends ServiceProvider
                 ->namespace($this->namespace)
                 ->group(base_path('routes/api.php'));
 
+            // User
             Route::prefix('/')
                 ->as('user.')
                 ->middleware('web')
                 ->namespace($this->namespace)
                 ->group(base_path('routes/auth.php'));
 
+            // Admin
             Route::prefix('admin')
                 ->as('admin.')
                 ->middleware('web')
                 ->namespace($this->namespace)
                 ->group(base_path('routes/admin.php'));
 
+            // Owner
             Route::prefix('owner')
                 ->as('owner.')
                 ->middleware('web')

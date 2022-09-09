@@ -7,7 +7,7 @@ use Illuminate\Foundation\Http\FormRequest;
 class UploadImageRequest extends FormRequest
 {
     /**
-     * Determine if the user is authorized to make this request.
+     * 認証
      *
      * @return bool
      */
@@ -17,21 +17,24 @@ class UploadImageRequest extends FormRequest
     }
 
     /**
-     * Get the validation rules that apply to the request.
+     * バリデーションルールの設定
      *
      * @return array
      */
     public function rules()
     {
         return [
-            //
-            'image' => 'image|mimes:jpg,jpeg,png|max:2028'
+            // Shop
+            'image' => 'image|mimes:jpg,jpeg,png|max:2028',
+            // Products
+            'files.image.*' => 'image|mimes:jpg,jpeg,png|max:2028',
         ];
     }
 
     /**
-     * validationメッセージを表示する。
+     * messagesメソッド
      * 
+     * validationメッセージの上書き
      * messagesメソッドをオーバーライド
      */
     public function messages()

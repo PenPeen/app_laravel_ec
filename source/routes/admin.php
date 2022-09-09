@@ -22,14 +22,12 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-// Route::get('/', function () {
-//     return view('admin.welcome');
-// });
-
+// owners Resource
+// except Show
 Route::resource('owners', OwnersController::class)
     ->middleware('auth:admin')->except(['show']);
 
-Route::get('/dashboard', function () {
+Route::get('/', function () {
     return view('admin.dashboard');
 })->middleware(['auth:admin'])->name('dashboard');
 

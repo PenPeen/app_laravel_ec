@@ -51,7 +51,7 @@
                                                         id="delete_form{{$owner->id}}" method="post">
                                                         @csrf
                                                         <button onclick="deleteConfirm({{$owner->id}})" type="button"
-                                                            class="w-16 md:w-24 text-white bg-gray-600 border-0 py-2 md:px-8 focus:outline-none hover:bg-gray-700 rounded">
+                                                            class="w-24 md:w-40 text-white bg-gray-600 border-0 py-2 md:px-8 focus:outline-none hover:bg-gray-700 rounded">
                                                             完全に削除
                                                         </button>
                                                     </form>
