@@ -3,13 +3,13 @@
 namespace App\Http\Controllers\Owner;
 
 use App\Http\Controllers\Controller;
+use App\Http\Requests\ProductRequest;
 use App\Models\Product;
 use App\Models\Image;
 use App\Models\Owner;
 use App\Models\Shop;
 use App\Models\Stock;
 use App\Models\PrimaryCategory;
-use Exception;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
@@ -83,23 +83,8 @@ class ProductController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(Request $request)
+    public function store(ProductRequest $request)
     {
-        $request->validate([
-            'name' => 'required|string|max:50',
-            'information' => 'required|string|max:1000',
-            'price' => 'required|integer',
-            'sort_order' => 'nullable|integer',
-            'quantity' => 'required|integer',
-            'shop_id' => 'required|exists:shops,id',
-            'secondary_category_id' => 'required|exists:secondary_categories,id',
-            'image1' => 'nullable|:exists:images,id',
-            'image2' => 'nullable|:exists:images,id',
-            'image3' => 'nullable|:exists:images,id',
-            'image4' => 'nullable|:exists:images,id',
-            'is_selling' => 'required'
-        ]);
-
         try {
             DB::transaction(function () use ($request) {
                 $product = Product::create($request->all());
@@ -113,24 +98,13 @@ class ProductController extends Controller
         } catch (Throwable $e) {
             Log::error($e);
             throw $e;
-        };
+        }
 
         return redirect(route('owner.products.index'))
             ->with([
                 'message' => '商品を登録しました',
                 'status' => 'info'
             ]);
-    }
-
-    /**
-     * Display the specified resource.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function show($id)
-    {
-        //
     }
 
     /**
@@ -141,7 +115,21 @@ class ProductController extends Controller
      */
     public function edit($id)
     {
-        //
+        $product = Product::findOrFail($id);
+        $quantity = Stock::where('product_id', $product->id)->sum('quantity');
+
+        $shops = Shop::where('owner_id', Auth::id())
+            ->select('id', 'name')
+            ->get();
+
+        $images = Image::where('owner_id', Auth::id())
+            ->select('id', 'title', 'filename')
+            ->orderBy('updated_at', 'desc')
+            ->get();
+
+        $categories = PrimaryCategory::with('secondaryCategory')->get();
+
+        return view('owner.products.edit', compact('product', 'quantity', 'shops', 'images', 'categories'));
     }
 
     /**
@@ -151,9 +139,61 @@ class ProductController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, $id)
+    public function update(ProductRequest $request, $id)
     {
-        //
+        $request->validate([
+            'current_quantity' => 'required|integer'
+        ]);
+
+        // 在庫数に変動があった場合
+        $product = Product::findOrFail($id);
+        $quantity = Stock::where('product_id', $product->id)->sum('quantity');
+
+        if (intval($request->input('current_quantity')) !== $quantity) {
+            $id = $request->route()->parameter('product');
+            return redirect()
+                ->route('owner.products.edit', ['product' => $id])
+                ->with([
+                    'message' => '在庫数が変更されています。再度確認してください。',
+                    'status' => 'alert',
+                ])
+                ->withInput();
+        }
+
+        // DB保存処理（トランザクション処理）
+        try {
+            DB::transaction(function () use ($request, $id) {
+                // products
+                $product = Product::findOrFail($id);
+                $product->update($request->all());
+
+                // stocks
+                if ($request->input('type') === \Constant::PRODUCT_LIST['add']) {
+                    // 入庫
+                    $quantity = $request->input('quantity');
+                } elseif ($request->input('type') === \Constant::PRODUCT_LIST['reduce']) {
+                    // 出庫
+                    $quantity = $request->input('quantity') * -1;
+                }
+                Stock::create([
+                    'product_id' => $product->id,
+                    'type' => $request->input('type'),
+                    'quantity' => $quantity,
+                ]);
+
+                // }
+            });
+        } catch (Throwable $e) {
+            Log::error($e);
+            throw $e;
+        }
+
+        // PRG
+        return redirect(route('owner.products.index'))
+            ->with([
+                'message' => '商品を編集しました。',
+                'status' => 'info'
+            ]);
     }
 
     /**
@@ -164,6 +204,13 @@ class ProductController extends Controller
      */
     public function destroy($id)
     {
-        //
+        $product = Product::findOrFail($id);
+        $product->delete();
+
+        return redirect(route('owner.products.index'))
+            ->with([
+                'message' => '商品を削除しました。',
+                'status' => 'alert'
+            ]);
     }
 }

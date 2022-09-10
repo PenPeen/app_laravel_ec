@@ -7,6 +7,7 @@ use App\Http\Requests\UploadImageRequest;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use App\Models\Image;
+use App\Models\Product;
 use App\Services\ImageService;
 use Illuminate\Support\Facades\Storage;
 
@@ -151,6 +152,31 @@ class ImageController extends Controller
      */
     public function destroy($id)
     {
+        // 画像が製品に使われている場合、NULLにする（外部キー制約）
+        $products = Product::where('image1', $id)
+            ->orWhere('image2', $id)
+            ->orWhere('image3', $id)
+            ->orWhere('image4', $id)
+            ->get();
+
+        if (!empty($products)) {
+            foreach ($products as $product) {
+                $id = intval($id);
+                if ($product->image1 === $id) {
+                    $product->fill(['image1' => null])->save();
+                }
+                if ($product->image2 === $id) {
+                    $product->fill(['image2' => null])->save();
+                }
+                if ($product->image3 === $id) {
+                    $product->fill(['image3' => null])->save();
+                }
+                if ($product->image4 === $id) {
+                    $product->fill(['image4' => null])->save();
+                }
+            }
+        }
+
         //Storageにファイルが存在する場合は削除する。
         $image = Image::findOrFail($id);
         $storagePath = 'public/products/' . $image->filename;

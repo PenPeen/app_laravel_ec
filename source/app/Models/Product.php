@@ -48,6 +48,30 @@ class Product extends Model
     }
 
     /**
+     * Imageモデルとのリレーション設定 ：多
+     */
+    public function imageSecond()
+    {
+        return $this->belongsTo(Image::class, 'image2', 'id');
+    }
+
+    /**
+     * Imageモデルとのリレーション設定 ：多
+     */
+    public function imageThird()
+    {
+        return $this->belongsTo(Image::class, 'image3', 'id');
+    }
+
+    /**
+     * Imageモデルとのリレーション設定 ：多
+     */
+    public function imageFourth()
+    {
+        return $this->belongsTo(Image::class, 'image4', 'id');
+    }
+
+    /**
      * Stockモデルとのリレーション設定 ：多
      */
     public function stock()

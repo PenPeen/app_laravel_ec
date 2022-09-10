@@ -29,7 +29,7 @@ class ShopSeeder extends Seeder
                 ],
                 [
                     'owner_id' => '2',
-                    'name' => '店名A',
+                    'name' => '店名B',
                     'information' => 'お店の説明！お店の説明だよ！！！',
                     'filename' => '',
                     'is_selling' => true

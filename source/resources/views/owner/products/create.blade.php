@@ -63,6 +63,7 @@
                                         focus:border-yellow-500 focus:bg-white focus:ring-2 focus:ring-yellow-200
                                         text-base outline-none text-gray-700 py-1 px-3 leading-8 transition-colors
                                         duration-200">
+                                    <span class="text-sm">0〜99で入力</span>
                                 </div>
                             </div>
 
