@@ -77,5 +77,5 @@
       </div>
     </div>
   </div>
-  <script src="{{ asset('/js/ownerForm.js') }}"></script>
+  <script src="{{ asset('/js/deleteConfirm.js') }}"></script>
 </x-app-layout>

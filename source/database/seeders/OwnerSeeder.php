@@ -6,6 +6,9 @@ use Illuminate\Database\Seeder;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
 
+/**
+ * Ownersテーブル Seeder処理
+ */
 class OwnerSeeder extends Seeder
 {
     /**

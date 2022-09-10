@@ -3,7 +3,6 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
-use Illuminate\Database\Eloquent\Model;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
@@ -12,7 +11,7 @@ class Owner extends Authenticatable
     use HasFactory, SoftDeletes;
 
     /**
-     * The attributes that are mass assignable.
+     * 更新を許可するカラム
      *
      * @var array<int, string>
      */
@@ -40,4 +39,16 @@ class Owner extends Authenticatable
     protected $casts = [
         'email_verified_at' => 'datetime',
     ];
+
+    // リレーション設定 Shop
+    public function shop()
+    {
+        return $this->hasOne(Shop::class);
+    }
+
+    // リレーション設定 Image
+    public function image()
+    {
+        return $this->HasMany(Image::class);
+    }
 }

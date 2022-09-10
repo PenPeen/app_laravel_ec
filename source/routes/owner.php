@@ -9,6 +9,9 @@ use App\Http\Controllers\Owner\Auth\NewPasswordController;
 use App\Http\Controllers\Owner\Auth\PasswordResetLinkController;
 use App\Http\Controllers\Owner\Auth\RegisteredUserController;
 use App\Http\Controllers\Owner\Auth\VerifyEmailController;
+use App\Http\Controllers\Owner\ImageController;
+use App\Http\Controllers\Owner\ProductController;
+use App\Http\Controllers\Owner\ShopController;
 
 /*
 |--------------------------------------------------------------------------
@@ -21,17 +24,27 @@ use App\Http\Controllers\Owner\Auth\VerifyEmailController;
 |
 */
 
-Route::get('/', function () {
-    return view('owner.welcome');
-});
-
 Route::get('/dashboard', function () {
     return view('owner.dashboard');
-})->middleware(['auth:owners'])->name('dashboard');
+})->middleware('auth:owners')->name('dashboard');
 
-Route::get('/register', [RegisteredUserController::class, 'create'])
-    ->middleware('guest')
-    ->name('register');
+Route::prefix('shops')
+    ->middleware('auth:owners')
+    ->group(function () {
+        Route::get('/index', [ShopController::class, 'index'])->name('shops.index');
+        Route::get('/edit/{shop}', [ShopController::class, 'edit'])->middleware('OwnerCheck')->name('shops.edit');
+        Route::post('/update/{shop}', [ShopController::class, 'update'])->middleware('OwnerCheck')->name('shops.update');
+    });
+
+Route::resource('images', ImageController::class)
+    ->middleware('auth:owners')->except('show');
+
+Route::resource('products', ProductController::class)
+    ->middleware('auth:owners')->except(('show'));
+
+// Route::get('/register', [RegisteredUserController::class, 'create'])
+//     ->middleware('guest')
+//     ->name('register');
 
 Route::post('/register', [RegisteredUserController::class, 'store'])
     ->middleware('guest');
