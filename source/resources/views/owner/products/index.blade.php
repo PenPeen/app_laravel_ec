@@ -12,26 +12,16 @@
                     {{-- フラッシュメッセージ --}}
                     <x-flash-message status="{{session('status')}}" />
                     <div class="flex justify-end mb-4">
-                        <button onclick="location.href='{{route('owner.products.create')}}'"
-                            class="text-white bg-yellow-500 border-0 py-2 px-8 focus:outline-none hover:bg-yellow-600 rounded text-lg">新規登録</button>
+                        <button onclick="location.href='{{route('owner.products.create')}}'" class="text-white bg-yellow-500 border-0 py-2 px-8 focus:outline-none hover:bg-yellow-600 rounded text-lg">新規登録</button>
                     </div>
                     <div class="flex flex-wrap">
                         @foreach($ownerInfo as $owner)
                         @foreach($owner->shop->product as $product)
                         <div class="w-1/4 p-1 md:p-4">
                             <a href="{{route('owner.products.edit',['product' => $product->id])}}">
-                                <div class="border rouded-md p-1 md:p-4">
-                                    <div class="mb-4">
-                                        <span class="border p-1 md:p-2 rounded-md bg-blue-400 text-white">
-                                            販売中
-                                        </span>
-                                        <div>
-                                            <x-thumbnail filename="{{$product->imagefirst->filename ?? ''}}"
-                                                type="products">
-                                            </x-thumbnail>
-                                        </div>
-                                        <div class="text-gray-700">{{$product->name}}</div>
-                                    </div>
+                                <div class="border rouded-md p-1 md:p-4 mb-4">
+                                    <x-thumbnail filename="{{$product->imageFirst->filename ?? ''}}" type="products" />
+                                    <div class="text-gray-700">{{$product->name}}</div>
                                 </div>
                             </a>
                         </div>

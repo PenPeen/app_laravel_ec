@@ -12,7 +12,7 @@ use Illuminate\Support\Facades\Route;
  */
 class Authenticate extends Middleware
 {
-    protected const USER_LOGIN = 'users.login';
+    protected const USER_LOGIN = 'user.login';
     protected const OWNER_LOGIN = 'owner.login';
     protected const ADMIN_LOGIN = 'admin.login';
 
@@ -31,7 +31,7 @@ class Authenticate extends Middleware
             } else if (Route::is('admin.*')) {
                 return route(self::ADMIN_LOGIN);
             }
-            return route($this->USER_LOGIN);
+            return route(self::USER_LOGIN);
         }
     }
 }
