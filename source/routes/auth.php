@@ -10,9 +10,9 @@ use App\Http\Controllers\Users\Auth\RegisteredUserController;
 use App\Http\Controllers\Users\Auth\VerifyEmailController;
 use Illuminate\Support\Facades\Route;
 
-Route::get('/', function () {
-    return view('user.welcome');
-});
+// Route::get('/', function () {
+//     return view('user.welcome');
+// });
 
 Route::get('/dashboard', function () {
     return view('user.dashboard');
